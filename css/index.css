@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: url("../images/galactic-night-sky-astronomy-science-combined-generative-ai.jpg");
+}
+
+nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+}
+
+.editor-container {
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+textarea {
+    width: calc(100% - 20px);
+    /* Decrease 20px from the total width to account for padding */
+    height: 500px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    resize: none;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
