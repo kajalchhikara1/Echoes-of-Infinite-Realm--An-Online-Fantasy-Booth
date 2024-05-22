@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Editor</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <!-- Add Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+</head>
+
+<body>
+    <nav class="first-clr">
+        <div class="col-lg-6 col-md-4 col-sm-3 tm-site-name-container">
+            <a target="_blank" href="home.html" class="tm-site-name">
+                <img src="images/logo.png" id="logo">
+            </a>
+        </div>
+    </nav>
+    <div class="editor-container">
+        <form action="" class="post">
+            <input type="text" id="fantasy-title" placeholder="Enter fantasy title...">
+            <br><br> <!-- Add gap between title and text area -->
+            <textarea id="fantasy-text" placeholder="Write your fantasy here..."></textarea>
+            <button type="button" id="btn-save">Save Fantasy</button>
+        </form>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/signUp.css">
+  <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'>
+</head>
+
+<body>
+
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form id="createAccountForm">
+      <h1>Create Account</h1>
+      <input class="input" type="email" id="createEmail" placeholder="Email" required>
+      <input class="input" type="password" id="createPassword" placeholder="Password" required>
+      <input class="input" type="password" id="createPasswordConfirm" placeholder="Re-enter Password" required>
+      <input class="input" type="text" id="createPhone" placeholder="Phone Number" required>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+  <div class="form-container sign-in-container">
+    <form id="signInForm">
+      <h1>Sign in</h1>
+      
+      <input class="input" type="email" id="signInEmail" placeholder="Email" required>
+      <input class="input" type="password" id="signInPassword" placeholder="Password" required>
+      <input class="input" type="text" id="signInTitle" placeholder="Title of Fantasy" required>
+      <select id="signInFantasyType" required>
+        <option value="" disabled selected>Fantasy Type</option>
+        <option value="Adventure">Adventure</option>
+        <option value="Love">Love</option>
+        <option value="Literature">Literature</option>
+        <option value="TimeTravel">Time Travel</option>
+        <option value="SciFi">Sci-Fi</option>
+      </select>
+      <input class="input" type="text" id="signInUsername" placeholder="Username (Optional)">
+      <a href="#">Forgot your password?</a>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome Back!</h1>
+        <p>To keep connected with us please login with your personal details</p>
+        <button class="ghost" id="signIn">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hi There!</h1>
+        <p>Enter your personal details to open an account with us</p>
+        <button class="ghost" id="signUp">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-analytics.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+  import { getDatabase, ref, set, update, push } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDK6SQ4r_gO3Ky6VetEc_FHik3iUxHFgjM",
+    authDomain: "data-for-fantasy.firebaseapp.com",
+    databaseURL: "https://data-for-fantasy-default-rtdb.firebaseio.com",
+    projectId: "data-for-fantasy",
+    storageBucket: "data-for-fantasy.appspot.com",
+    messagingSenderId: "873944978436",
+    appId: "1:873944978436:web:7ccb14fd5228d55bfe1151",
+    measurementId: "G-PBTZC6J4YH"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth();
+  const database = getDatabase(app);
+
+  document.getElementById('createAccountForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('createEmail').value;
+    const password = document.getElementById('createPassword').value;
+    const passwordConfirm = document.getElementById('createPasswordConfirm').value;
+    const phone = document.getElementById('createPhone').value;
+
+    if (password !== passwordConfirm) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('Account created:', user);
+
+      await set(ref(database, 'users/' + user.uid), {
+        email: email,
+        phone: phone
+      });
+      console.log('User information saved successfully');
+      alert('Account created successfully.');
+    } catch (error) {
+      console.error('Error creating account:', error);
+      alert('Error creating account: ' + error.message);
+    }
+  });
+
+  document.getElementById('signInForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signInEmail').value;
+    const password = document.getElementById('signInPassword').value;
+    const title = document.getElementById('signInTitle').value;
+    const fantasyType = document.getElementById('signInFantasyType').value;
+    const username = document.getElementById('signInUsername').value;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('Signed in:', user);
+
+      const newPostKey = push(ref(database, 'fantasies')).key;
+      const postData = {
+        userId: user.uid,
+        email: user.email,
+        title: title,
+        fantasyType: fantasyType,
+        username: username,
+        timestamp: Date.now()
+      };
+
+      const updates = {};
+      updates['/fantasies/' + newPostKey] = postData;
+      await update(ref(database), updates);
+      console.log('Post saved successfully');
+      alert('Signed in and post saved successfully.');
+    } catch (error) {
+      console.error('Error signing in:', error);
+      alert('Error signing in: ' + error.message);
+    }
+  });
+</script>
+
+<script src="js/signUp.js" charset="utf-8"></script>
+</body>
+</html>
